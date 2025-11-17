@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitTrack Pro — Personal Fitness Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">FT</div>
+        <div>
+          <div class="app-name">FitTrack Pro</div>
+          <div class="tagline">Personal Fitness &amp; Wellness Dashboard</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div id="liveClock" class="clock" aria-live="polite">--:--:--</div>
+        <label class="theme-toggle" title="Toggle theme">
+          <input id="themeToggle" type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-btn active" data-page="overview">Overview</button>
+      <button class="nav-btn" data-page="activity">Activity Log</button>
+      <button class="nav-btn" data-page="meals">Meal Planner</button>
+      <button class="nav-btn" data-page="insights">Insights</button>
+    </nav>
+
+    <main class="main">
+      <!-- Overview -->
+      <section id="overview" class="page active" aria-labelledby="overviewTitle">
+        <div class="container">
+          <h1 id="overviewTitle">Daily Wellness Overview</h1>
+          <p class="muted">Quick glance at today's steps, calories &amp; water intake.</p>
+
+          <div class="top-cards">
+            <article class="card stat-card">
+              <div class="stat-header">
+                <div>
+                  <h3>Steps</h3>
+                  <small class="muted">Goal: <span id="stepsGoalDisplay">8000</span></small>
+                </div>
+                <div class="circle" aria-hidden="true">
+                  <svg viewBox="0 0 36 36">
+                    <path class="bg" d="M18 2a16 16 0 1 1 0 32a16 16 0 1 1 0 -32"></path>
+                    <path id="stepsProgress" class="progress" stroke-dasharray="0,100" d="M18 2a16 16 0 1 1 0 32a16 16 0 1 1 0 -32"></path>
+                    <text x="18" y="20" class="pct" id="stepsCount">0</text>
+                  </svg>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="muted">Today's steps</div>
+                <div class="big" id="stepsText">0</div>
+              </div>
+            </article>
+
+            <article class="card stat-card">
+              <div class="stat-header">
+                <div>
+                  <h3>Calories Burned</h3>
+                  <small class="muted">Goal: <span id="calGoalDisplay">500</span> kcal</small>
+                </div>
+                <div class="circle" aria-hidden="true">
+                  <svg viewBox="0 0 36 36">
+                    <path class="bg" d="M18 2a16 16 0 1 1 0 32a16 16 0 1 1 0 -32"></path>
+                    <path id="calProgress" class="progress" stroke-dasharray="0,100" d="M18 2a16 16 0 1 1 0 32a16 16 0 1 1 0 -32"></path>
+                    <text x="18" y="20" class="pct" id="calCount">0</text>
+                  </svg>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="muted">Calories today</div>
+                <div class="big" id="calText">0 kcal</div>
+              </div>
+            </article>
+
+            <article class="card stat-card">
+              <div class="stat-header">
+                <div>
+                  <h3>Water Intake</h3>
+                  <small class="muted">Goal: <span id="waterGoalDisplay">3000</span> ml</small>
+                </div>
+                <div class="circle" aria-hidden="true">
+                  <svg viewBox="0 0 36 36">
+                    <path class="bg" d="M18 2a16 16 0 1 1 0 32a16 16 0 1 1 0 -32"></path>
+                    <path id="waterProgress" class="progress" stroke-dasharray="0,100" d="M18 2a16 16 0 1 1 0 32a16 16 0 1 1 0 -32"></path>
+                    <text x="18" y="20" class="pct" id="waterCount">0</text>
+                  </svg>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="muted">ml consumed</div>
+                <div class="big" id="waterText">0 ml</div>
+              </div>
+            </article>
+          </div>
+
+          <div class="actions-row spaced">
+            <div class="left-actions">
+              <button id="goUpdateProgress" class="btn">Update Today’s Progress</button>
+              <button id="openGoalModal" class="btn ghost">Set Goals</button>
+              <button id="openStepsModal" class="btn ghost">Update Steps</button>
+              <button id="openWaterModal" class="btn ghost">Update Water Intake</button>
+
+            </div>
+            <div class="right-actions">
+              <button id="resetDashboard" class="btn danger">Reset Dashboard</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity -->
+      <section id="activity" class="page" aria-labelledby="activityTitle">
+        <div class="container">
+          <h1 id="activityTitle">Activity Log</h1>
+
+          <div class="activity-top">
+            <button id="openActivityForm" class="btn small-btn">+ Add Activity</button>
+            <div class="filter-row">
+              <label>Filter:
+                <select id="activityFilter"><option>All</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+              </label>
+            </div>
+          </div>
+
+          <div id="activityFormArea" class="form-area hidden">
+            <div class="card form-card">
+              <h3>Add Activity</h3>
+              <form id="activityForm" novalidate>
+                <label>Activity Name
+                  <input id="actName" placeholder="e.g., Running" required />
+                </label>
+
+                <div class="two-col">
+                  <label>Duration (mins)
+                    <input id="actDuration" type="number" min="1" required />
+                  </label>
+                  <label>Calories Burned
+                    <input id="actCalories" type="number" min="1" required />
+                  </label>
+                </div>
+
+                <label>Time of Day
+                  <select id="actPeriod">
+                    <option>Morning</option><option>Afternoon</option><option>Evening</option>
+                  </select>
+                </label>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn">Add</button>
+                  <button id="cancelActivity" type="button" class="btn ghost">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <ul id="activityList" class="activity-list" aria-live="polite"></ul>
+        </div>
+      </section>
+
+      <!-- Meals -->
+      <section id="meals" class="page" aria-labelledby="mealsTitle">
+        <div class="container">
+          <h1 id="mealsTitle">Meal Planner</h1>
+
+          <div class="meals-grid">
+            <div class="card meal-column" data-meal="Breakfast">
+              <h3>Breakfast</h3>
+              <ul id="breakfastList" class="meal-list"></ul>
+              <label>Meal Name <input id="mealNameB" placeholder="e.g., Oats" /></label>
+              <label>Calories <input id="mealCalB" type="number" min="1" /></label>
+              <button class="btn addMealBtn" data-target="Breakfast">Add</button>
+            </div>
+
+            <div class="card meal-column" data-meal="Lunch">
+              <h3>Lunch</h3>
+              <ul id="lunchList" class="meal-list"></ul>
+              <label>Meal Name <input id="mealNameL" placeholder="e.g., Salad" /></label>
+              <label>Calories <input id="mealCalL" type="number" min="1" /></label>
+              <button class="btn addMealBtn" data-target="Lunch">Add</button>
+            </div>
+
+            <div class="card meal-column" data-meal="Dinner">
+              <h3>Dinner</h3>
+              <ul id="dinnerList" class="meal-list"></ul>
+              <label>Meal Name <input id="mealNameD" placeholder="e.g., Kadai Paneer" /></label>
+              <label>Calories <input id="mealCalD" type="number" min="1" /></label>
+              <button class="btn addMealBtn" data-target="Dinner">Add</button>
+            </div>
+          </div>
+
+          <div class="summary-card card">
+            <h3>Total Daily Calories</h3>
+            <div id="dailyCalories" class="big">0 kcal</div>
+            <small class="muted">Goal: <span id="dailyCalGoalDisplay">2000</span> kcal</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Insights -->
+      <section id="insights" class="page" aria-labelledby="insightsTitle">
+        <div class="container">
+          <h1 id="insightsTitle">Insights & Summary</h1>
+
+          <div class="insights-grid">
+            <div class="card">
+              <h3>Weekly Activities</h3>
+              <div id="activityBars" class="bars"></div>
+            </div>
+
+            <div class="card">
+              <h3>Weekly Calories</h3>
+              <div id="calorieBars" class="bars"></div>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button id="downloadSummary" class="btn">Download Summary</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Goals modal -->
+  <div id="goalModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Set Goals</h3>
+      </div>
+
+      <div class="modal-body">
+        <label>Steps Goal <input id="goalSteps" type="number" min="0" /></label>
+        <label>Calories Goal <input id="goalCalories" type="number" min="0" /></label>
+        <label>Water Goal (ml) <input id="goalWater" type="number" min="0" /></label>
+        <label>Daily Meal Calories Goal <input id="goalDailyCal" type="number" min="0" /></label>
+      </div>
+
+      <div class="modal-actions">
+        <button id="closeGoalModal" class="btn ghost">Cancel</button>
+        <button id="saveGoals" class="btn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div id="resetConfirmModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal">
+      <h3>Reset Dashboard</h3>
+      <p>All data will be cleared and values set to zero. This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="cancelReset" class="btn ghost">Cancel</button>
+        <button id="confirmReset" class="btn danger">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+  <!-- Update Steps Modal -->
+<div id="stepsModalBackdrop" class="modal-backdrop">
+  <div class="modal scale-modal">
+    <h3>Update Steps</h3>
+
+    <label>Steps Amount
+      <input type="number" id="stepsAmountInput" min="1" placeholder="Enter steps">
+    </label>
+
+    <label>Time of Day
+      <select id="stepsTimeInput">
+        <option>Morning</option>
+        <option>Afternoon</option>
+        <option>Evening</option>
+      </select>
+    </label>
+
+    <div class="modal-actions">
+      <button class="btn ghost" id="closeStepsModal">Cancel</button>
+      <button class="btn" id="addStepsBtn">Add</button>
+      <button class="btn danger" id="removeStepsBtn">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Update Water Modal -->
+<div id="waterModalBackdrop" class="modal-backdrop">
+  <div class="modal scale-modal">
+    <h3>Update Water Intake</h3>
+
+    <label>Water Amount (ml)
+      <input type="number" id="waterAmountInput" min="50" placeholder="Enter ml">
+    </label>
+
+    <label>Time of Day
+      <select id="waterTimeInput">
+        <option>Morning</option>
+        <option>Afternoon</option>
+        <option>Evening</option>
+      </select>
+    </label>
+
+    <div class="modal-actions">
+      <button class="btn ghost" id="closeWaterModal">Cancel</button>
+      <button class="btn" id="addWaterBtn">Add</button>
+      <button class="btn danger" id="removeWaterBtn">Remove</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
